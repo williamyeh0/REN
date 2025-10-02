@@ -111,13 +111,10 @@ This project is released under the MIT License. See [`LICENSE`](LICENSE) for det
 
 ## Citing REN
 ```
-@misc{khosla2025renfastefficientregion,
+@inproceedings{khosla2025ren,
       title={REN: Fast and Efficient Region Encodings from Patch-Based Image Encoders}, 
       author={Savya Khosla and Sethuraman TV and Barnett Lee and Alexander Schwing and Derek Hoiem},
+      booktitle={Neural Information Processing Systems},
       year={2025},
-      eprint={2505.18153},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2505.18153}, 
 }
 ```
