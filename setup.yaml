@@ -103,7 +103,8 @@ dependencies:
       - torchmetrics==1.7.1
       - torchvision==0.20.1
       - tqdm==4.67.1
-      - transformers==4.47.1
+      # - transformers==4.47.1
+      - transformers==4.57.0
       - triton==3.1.0
       - typing-extensions==4.12.2
       - tzdata==2025.1

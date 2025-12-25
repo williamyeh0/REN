@@ -10,7 +10,6 @@ from ren import REN, XREN
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-
 def test_ren():
     parser = argparse.ArgumentParser()
     parser.add_argument('--feature_extractor', type=str, required=True,
@@ -79,4 +78,5 @@ def test_xren():
 
 
 if __name__ == '__main__':
-    test_xren()
+    test_ren()
+    # test_xren()

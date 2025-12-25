@@ -11,6 +11,7 @@ from task_utils import CenterPadding, upsample_features, group_predictions
 sys.path.append('segment_anything/')
 from segment_anything.sam2.build_sam import build_sam2
 from segment_anything.sam2.automatic_mask_generator import SAM2AutomaticMaskGenerator
+from transformers import AutoModelForImageTextToText, AutoProcessor
 
 
 class FeatureExtractor():
@@ -24,6 +25,12 @@ class FeatureExtractor():
         self.models['openclip_vitg14'] = open_clip.create_model('ViT-g-14',
                                                                 pretrained='laion2b_s34b_b88k',
                                                                 device=device).visual
+        qwen3_vl_4B_it = AutoModelForImageTextToText.from_pretrained(
+            "Qwen/Qwen3-VL-4B-Instruct", 
+            dtype="bfloat16", 
+            device_map="auto"
+        )
+        self.models['qwen3_vl_4B_it'] = qwen3_vl_4B_it.model.visual
         self.return_class_token = return_class_token
     
     def extract_dino(self, model, images, batch_size=1024, patch_length=8, layers=[11]):
@@ -103,6 +110,10 @@ class FeatureExtractor():
         cls_tokens = torch.cat(cls_tokens, dim=0)
         return feature_tokens, feature_maps, cls_tokens
         
+    def extract_qwen3_vl_4B_it(self, model, images, batch_size=1024, patch_length=16):
+        # patch length? print other model to deduce patch length 
+        # transform images 
+        # extract features over image batches and get feature_tokens, feature_maps, cls_tokens
     def __call__(self, model, images, resize=True):
         if model == 'dino_vitb8':
             feature_tokens, feature_maps, cls_tokens = self.extract_dino(self.models[model], images)
@@ -113,6 +124,12 @@ class FeatureExtractor():
         elif model == 'openclip_vitg14':
             feature_tokens, feature_maps, cls_tokens = self.extract_openclip(self.models[model], images)
             patch_size = 14
+        """
+        TODO: Add feature extraction for Qwen3-VL-4B-Instruct
+        elif model == 'qwen3_vl_4B_it':
+            feature_tokens, feature_maps, cls_tokens = self.extract_qwen3_vl_4B_it(self.models[model], images)
+            patch_size = 16
+        """
         else:
             raise ValueError(f'Feature extraction is not implemented for {model}.')
         
@@ -209,6 +226,9 @@ class FeatureProjector(nn.Module):
                 nn.init.kaiming_normal_(self.proj['dinov2_vitl14'].weight, mode='fan_in', nonlinearity='linear')
                 if use_bias:
                     nn.init.zeros_(self.proj['dinov2_vitl14'].bias)
+            """
+            TODO: Add projection for Qwen3-VL-4B-Instruct
+            """
             else:
                 raise ValueError(f"Unsupported feature extractor: {extractor_name}")
     
